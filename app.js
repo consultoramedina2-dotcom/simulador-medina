@@ -14,6 +14,12 @@ function num(id){
 
 function money(v){ return brl.format(Math.max(0, v || 0)); }
 
+function atualizarValorUnidade(){
+  const opcao = $('unidade').options[$('unidade').selectedIndex];
+  $('valorTabela').value = opcao?.dataset?.valor || '0';
+  calcular();
+}
+
 function addIntermediaria(data='', valor=0){
   const wrap = document.createElement('div');
   wrap.className = 'inter-row';
@@ -107,9 +113,10 @@ function calcular(){
   $('mensagem').value = linhas.join('\n');
 }
 
-['empreendimento','unidade','valorTabela','desconto','ato','financiamento','chaves','chavesData','qtdMensais']
+['empreendimento','valorTabela','desconto','ato','financiamento','chaves','chavesData','qtdMensais']
   .forEach(id => $(id).addEventListener('input', calcular));
 
+$('unidade').addEventListener('change', atualizarValorUnidade);
 $('addIntermediaria').addEventListener('click', () => addIntermediaria());
 
 $('copiar').addEventListener('click', async () => {
@@ -126,7 +133,7 @@ $('copiar').addEventListener('click', async () => {
 $('btnExemplo').addEventListener('click', () => {
   $('empreendimento').value = 'TAG Guedala';
   $('unidade').value = 'R2V • 1 dormitório • 26 m²';
-  $('valorTabela').value = '344000';
+  atualizarValorUnidade();
   $('desconto').value = '7000';
   $('ato').value = '10000';
   $('financiamento').value = '275200';
