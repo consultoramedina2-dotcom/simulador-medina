@@ -8,6 +8,7 @@ function num(id){
   return Number.isFinite(n) ? n : 0;
 }
 function money(v){ return brl.format(Math.max(0, v || 0)); }
+function valorInput(v){ return Number((v || 0).toFixed(2)).toString(); }
 
 function atualizarValorUnidade(){
   const opcao = $('unidade').options[$('unidade').selectedIndex];
@@ -48,6 +49,42 @@ function intermediarias(){
       return Number.isFinite(n) ? n : 0;
     })()
   }));
+}
+
+function preencherFluxoSugerido(){
+  const tabela = num('valorTabela');
+  if(tabela <= 0){
+    $('status').textContent = 'Selecione uma unidade antes de preencher o fluxo sugerido.';
+    return;
+  }
+
+  const caixa = $('formaPagamento').value === 'caixa';
+
+  // O fluxo sugerido replica a tabela oficial do TAG Guedala.
+  // O HIS2 usa comercialmente R$ 287 mil como padrão, conforme orientação da equipe.
+  $('desconto').value = '0';
+  $('ato').value = valorInput(tabela * 0.12);
+  $('qtdMensais').value = '25';
+  $('intermediarias').innerHTML = '';
+
+  if(caixa){
+    $('financiamento').value = valorInput(tabela * 0.80);
+    $('valorMensal').value = valorInput((tabela * 0.05) / 25);
+    addIntermediaria('agosto/2027', tabela * 0.01);
+    addIntermediaria('agosto/2028', tabela * 0.01);
+    $('chaves').value = valorInput(tabela * 0.01);
+  } else {
+    $('financiamento').value = '0';
+    $('valorMensal').value = valorInput((tabela * 0.68) / 25);
+    addIntermediaria('agosto/2027', tabela * 0.05);
+    addIntermediaria('agosto/2028', tabela * 0.05);
+    $('chaves').value = valorInput(tabela * 0.10);
+  }
+
+  $('chavesData').value = 'outubro/2028';
+  atualizarFormaPagamento();
+  calcular();
+  $('status').textContent = '✅ Fluxo sugerido preenchido pela tabela oficial. Você pode alterar os valores se precisar negociar.';
 }
 
 function calcular(){
@@ -172,6 +209,7 @@ $('unidade').addEventListener('change', atualizarValorUnidade);
 $('objetivoCompra').addEventListener('change', calcular);
 $('formaPagamento').addEventListener('change', atualizarFormaPagamento);
 $('addIntermediaria').addEventListener('click', () => addIntermediaria());
+$('btnFluxoSugerido').addEventListener('click', preencherFluxoSugerido);
 
 $('copiar').addEventListener('click', async () => {
   if($('copiar').disabled) return;
