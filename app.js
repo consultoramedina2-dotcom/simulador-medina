@@ -107,7 +107,11 @@ function calcular(){
     linhas.push('No financiamento pela Caixa Econômica Federal, durante a construção também haverá o pagamento dos encargos referentes à fase de obras (evolução de obras), conforme o andamento da construção e as condições do contrato de financiamento.');
   }
   linhas.push('');
-  linhas.push('_Valores sujeitos à confirmação, disponibilidade da unidade e condições contratuais. Quando houver financiamento, sujeito à análise e aprovação de crédito._');
+  if(forma === 'caixa'){
+    linhas.push('_Valores sujeitos à confirmação, disponibilidade da unidade e condições contratuais. Financiamento sujeito à análise e aprovação de crédito._');
+  } else {
+    linhas.push('_Valores sujeitos à confirmação, disponibilidade da unidade, atualização pelo INCC e demais condições contratuais._');
+  }
   $('mensagem').value = linhas.join('\n');
 }
 
