@@ -77,7 +77,26 @@ function calcular(){
   const empreendimento = $('empreendimento').value.trim();
   const unidade = $('unidade').value.trim();
   const unidadeR2V = unidade.startsWith('R2V');
+  const airbnbIncompativel = objetivo === 'airbnb' && unidade && !unidadeR2V;
   const chavesData = $('chavesData').value.trim();
+
+  $('copiar').disabled = airbnbIncompativel;
+  if(airbnbIncompativel){
+    $('status').textContent = 'Proposta bloqueada: para Airbnb/short stay, selecione uma unidade R2V.';
+    $('mensagem').value = [
+      '⚠️ *PROPOSTA BLOQUEADA*',
+      '',
+      `🔑 *Unidade selecionada:* ${unidade}`,
+      '🎯 *Objetivo:* Investimento – Airbnb/short stay',
+      '',
+      'Esta unidade não possui enquadramento R2V e não é compatível com a finalidade de Airbnb/short stay.',
+      'Para gerar a proposta, selecione uma unidade R2V.'
+    ].join('\n');
+    return;
+  }
+
+  if($('status').textContent.startsWith('Proposta bloqueada')) $('status').textContent = '';
+
   const linhas = [];
   linhas.push('🏠 *SIMULAÇÃO DE PAGAMENTO*');
   if(empreendimento) linhas.push(`📍 *Empreendimento:* ${empreendimento}`);
@@ -85,13 +104,9 @@ function calcular(){
   linhas.push(`🎯 *Objetivo:* ${objetivo === 'moradia' ? 'Moradia' : objetivo === 'investimento' ? 'Investimento – locação tradicional' : 'Investimento – Airbnb/short stay'}`);
   linhas.push(`🏦 *Forma de pagamento:* ${forma === 'caixa' ? 'Financiamento Caixa' : 'Direto com a construtora'}`);
 
-  if(objetivo === 'airbnb'){
+  if(objetivo === 'airbnb' && unidadeR2V){
     linhas.push('');
-    if(unidadeR2V){
-      linhas.push('🏡 *Airbnb/short stay:* esta unidade R2V permite locação por curta duração, conforme seu enquadramento e autorização prevista na convenção do condomínio.');
-    } else if(unidade){
-      linhas.push('⚠️ *Atenção:* esta unidade não possui enquadramento R2V e não é compatível com a finalidade de Airbnb/short stay. Para essa finalidade, selecione uma unidade R2V.');
-    }
+    linhas.push('🏡 *Airbnb/short stay:* esta unidade R2V permite locação por curta duração, conforme seu enquadramento e autorização prevista na convenção do condomínio.');
   }
 
   linhas.push('');
@@ -135,6 +150,7 @@ $('formaPagamento').addEventListener('change', atualizarFormaPagamento);
 $('addIntermediaria').addEventListener('click', () => addIntermediaria());
 
 $('copiar').addEventListener('click', async () => {
+  if($('copiar').disabled) return;
   try {
     await navigator.clipboard.writeText($('mensagem').value);
     $('status').textContent = 'Mensagem copiada. Agora é só colar no WhatsApp.';
