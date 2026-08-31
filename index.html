@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simulador Medina | Fluxo de Pagamento</title>
+  <meta name="description" content="Simulador de fluxo de pagamento imobiliário." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <span class="brand-kicker">FERNANDA MEDINA</span>
+      <h1>Simulador Medina</h1>
+      <p>Monte o fluxo de pagamento e gere um resumo pronto para enviar ao cliente.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <h2>Dados da proposta</h2>
+          <p>Preencha os valores. O saldo e as parcelas são recalculados automaticamente.</p>
+        </div>
+        <button id="btnExemplo" class="ghost">Carregar exemplo</button>
+      </div>
+
+      <div class="grid">
+        <label>
+          Empreendimento
+          <input id="empreendimento" type="text" placeholder="Ex.: TAG Guedala" />
+        </label>
+
+        <label>
+          Unidade / tipologia
+          <input id="unidade" type="text" placeholder="Ex.: R2V • 1 dormitório" />
+        </label>
+
+        <label>
+          Valor de tabela
+          <input id="valorTabela" inputmode="decimal" value="344000" />
+        </label>
+
+        <label>
+          Desconto
+          <input id="desconto" inputmode="decimal" value="0" />
+        </label>
+
+        <label>
+          Ato
+          <input id="ato" inputmode="decimal" value="10000" />
+        </label>
+
+        <label>
+          Financiamento bancário
+          <input id="financiamento" inputmode="decimal" value="0" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <h2>Intermediárias e chaves</h2>
+          <p>Você pode adicionar quantas parcelas especiais precisar.</p>
+        </div>
+        <button id="addIntermediaria" class="secondary">+ Adicionar intermediária</button>
+      </div>
+
+      <div id="intermediarias"></div>
+
+      <div class="grid two">
+        <label>
+          Valor nas chaves
+          <input id="chaves" inputmode="decimal" value="0" />
+        </label>
+
+        <label>
+          Data / referência das chaves
+          <input id="chavesData" type="text" placeholder="Ex.: outubro/2028" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Mensais</h2>
+      <div class="grid two">
+        <label>
+          Quantidade de parcelas mensais
+          <input id="qtdMensais" type="number" min="0" step="1" value="25" />
+        </label>
+
+        <label>
+          Valor da parcela mensal
+          <div class="readonly" id="valorMensal">R$ 0,00</div>
+        </label>
+      </div>
+      <p class="hint">O valor mensal é calculado com base no saldo restante após desconto, ato, intermediárias, chaves e financiamento.</p>
+    </section>
+
+    <section class="summary-grid">
+      <div class="metric">
+        <span>Preço final</span>
+        <strong id="precoFinal">R$ 0,00</strong>
+      </div>
+      <div class="metric">
+        <span>Total antes do financiamento</span>
+        <strong id="entradaTotal">R$ 0,00</strong>
+      </div>
+      <div class="metric">
+        <span>Financiamento</span>
+        <strong id="financiamentoResumo">R$ 0,00</strong>
+      </div>
+      <div class="metric">
+        <span>Conferência</span>
+        <strong id="conferencia">R$ 0,00</strong>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <h2>Resumo para WhatsApp</h2>
+          <p>Revise e copie com um clique.</p>
+        </div>
+        <button id="copiar" class="primary">Copiar mensagem</button>
+      </div>
+      <textarea id="mensagem" rows="16"></textarea>
+      <div id="status" class="status"></div>
+    </section>
+  </main>
+
+  <footer>
+    Simulador Medina • ferramenta de apoio comercial. Valores sujeitos à confirmação.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
