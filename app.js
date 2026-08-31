@@ -8,7 +8,9 @@ function num(id){
   return Number.isFinite(n) ? n : 0;
 }
 function money(v){ return brl.format(Math.max(0, v || 0)); }
-function valorInput(v){ return Number((v || 0).toFixed(2)).toString(); }
+function valorInput(v){
+  return (Math.round((v || 0) * 100) / 100).toFixed(2).replace('.', ',');
+}
 
 function atualizarValorUnidade(){
   const opcao = $('unidade').options[$('unidade').selectedIndex];
@@ -31,7 +33,7 @@ function addIntermediaria(data='', valor=0){
       <input class="inter-data" type="text" placeholder="Ex.: dezembro/2027" value="${data}">
     </label>
     <label>Valor
-      <input class="inter-valor" inputmode="decimal" value="${valor || 0}">
+      <input class="inter-valor" inputmode="decimal" value="${typeof valor === 'number' ? valorInput(valor) : valor}">
     </label>
     <button class="remove" type="button">Remover</button>`;
   wrap.querySelectorAll('input').forEach(i => i.addEventListener('input', calcular));
@@ -60,8 +62,6 @@ function preencherFluxoSugerido(){
 
   const caixa = $('formaPagamento').value === 'caixa';
 
-  // O fluxo sugerido replica a tabela oficial do TAG Guedala.
-  // O HIS2 usa comercialmente R$ 287 mil como padrão, conforme orientação da equipe.
   $('desconto').value = '0';
   $('ato').value = valorInput(tabela * 0.12);
   $('qtdMensais').value = '25';
@@ -84,7 +84,9 @@ function preencherFluxoSugerido(){
   $('chavesData').value = 'outubro/2028';
   atualizarFormaPagamento();
   calcular();
-  $('status').textContent = '✅ Fluxo sugerido preenchido pela tabela oficial. Você pode alterar os valores se precisar negociar.';
+  if(!$('copiar').disabled){
+    $('status').textContent = '✅ Fluxo sugerido preenchido pela tabela oficial. Você pode alterar os valores se precisar negociar.';
+  }
 }
 
 function calcular(){
