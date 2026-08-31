@@ -29,17 +29,23 @@
       <div class="grid">
         <label>
           Empreendimento
-          <input id="empreendimento" type="text" placeholder="Ex.: TAG Guedala" />
+          <input id="empreendimento" type="text" value="TAG Guedala" readonly />
         </label>
 
         <label>
           Unidade / tipologia
-          <input id="unidade" type="text" placeholder="Ex.: R2V • 1 dormitório" />
+          <select id="unidade">
+            <option value="">Selecione uma unidade</option>
+            <option value="HIS2 • 1 dormitório • 26 m²" data-valor="287000">HIS2 • 1 dormitório • 26 m² — R$ 287 mil</option>
+            <option value="HMP • 1 dormitório • 26 m²" data-valor="314000">HMP • 1 dormitório • 26 m² — R$ 314 mil</option>
+            <option value="R2V • 1 dormitório • 26 m²" data-valor="344000">R2V • 1 dormitório • 26 m² — R$ 344 mil</option>
+            <option value="R2V • 2 dormitórios • 40 m²" data-valor="484000">R2V • 2 dormitórios • 40 m² — R$ 484 mil</option>
+          </select>
         </label>
 
         <label>
           Valor de tabela
-          <input id="valorTabela" inputmode="decimal" value="344000" />
+          <input id="valorTabela" inputmode="decimal" value="0" readonly />
         </label>
 
         <label>
