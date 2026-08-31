@@ -118,7 +118,7 @@ function calcular(){
   linhas.push('');
   if(ato > 0) linhas.push(`• Ato: *${money(ato)}*`);
   inters.filter(x=>x.valor>0).forEach(x=> linhas.push(`• Intermediária${x.data ? ` (${x.data})` : ''}: *${money(x.valor)}*`));
-  if(chaves > 0) linhas.push(`• Chaves${chavesData ? ` (${chavesData})` : ''}: *${money(chaves)}*`);
+  if(chaves > 0) linhas.push(`• Parcela única${chavesData ? ` (${chavesData})` : ''}: *${money(chaves)}*`);
   if(qtd > 0 && saldoMensais > 0) linhas.push(`• ${qtd} mensais de *${money(mensal)}*`);
   if(financiamento > 0) linhas.push(`• Financiamento Caixa: *${money(financiamento)}*`);
   linhas.push('');
