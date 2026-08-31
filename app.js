@@ -55,6 +55,7 @@ function calcular(){
   const desconto = num('desconto');
   const ato = num('ato');
   const forma = $('formaPagamento').value;
+  const objetivo = $('objetivoCompra').value;
   const financiamento = forma === 'caixa' ? num('financiamento') : 0;
   const chaves = num('chaves');
   const qtd = Math.max(0, parseInt($('qtdMensais').value || '0', 10));
@@ -75,12 +76,24 @@ function calcular(){
 
   const empreendimento = $('empreendimento').value.trim();
   const unidade = $('unidade').value.trim();
+  const unidadeR2V = unidade.startsWith('R2V');
   const chavesData = $('chavesData').value.trim();
   const linhas = [];
   linhas.push('🏠 *SIMULAÇÃO DE PAGAMENTO*');
   if(empreendimento) linhas.push(`📍 *Empreendimento:* ${empreendimento}`);
   if(unidade) linhas.push(`🔑 *Unidade:* ${unidade}`);
+  linhas.push(`🎯 *Objetivo:* ${objetivo === 'moradia' ? 'Moradia' : objetivo === 'investimento' ? 'Investimento – locação tradicional' : 'Investimento – Airbnb/short stay'}`);
   linhas.push(`🏦 *Forma de pagamento:* ${forma === 'caixa' ? 'Financiamento Caixa' : 'Direto com a construtora'}`);
+
+  if(objetivo === 'airbnb'){
+    linhas.push('');
+    if(unidadeR2V){
+      linhas.push('🏡 *Airbnb/short stay:* esta unidade R2V permite locação por curta duração, conforme seu enquadramento e autorização prevista na convenção do condomínio.');
+    } else if(unidade){
+      linhas.push('⚠️ *Atenção:* esta unidade não possui enquadramento R2V e não é compatível com a finalidade de Airbnb/short stay. Para essa finalidade, selecione uma unidade R2V.');
+    }
+  }
+
   linhas.push('');
   linhas.push(`💰 *Valor de tabela:* ${money(tabela)}`);
   if(desconto > 0){
@@ -117,6 +130,7 @@ function calcular(){
 
 ['empreendimento','valorTabela','desconto','ato','financiamento','chaves','chavesData','qtdMensais'].forEach(id => $(id).addEventListener('input', calcular));
 $('unidade').addEventListener('change', atualizarValorUnidade);
+$('objetivoCompra').addEventListener('change', calcular);
 $('formaPagamento').addEventListener('change', atualizarFormaPagamento);
 $('addIntermediaria').addEventListener('click', () => addIntermediaria());
 
@@ -132,6 +146,7 @@ $('copiar').addEventListener('click', async () => {
 $('btnExemplo').addEventListener('click', () => {
   $('empreendimento').value = 'TAG Guedala';
   $('unidade').value = 'R2V • 1 dormitório • 26 m²';
+  $('objetivoCompra').value = 'moradia';
   $('formaPagamento').value = 'caixa';
   atualizarValorUnidade();
   $('desconto').value = '7000';
