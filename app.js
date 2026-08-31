@@ -54,6 +54,7 @@ function calcular(){
   const tabela = num('valorTabela');
   const desconto = num('desconto');
   const ato = num('ato');
+  const atoRecomendado = tabela * 0.12;
   const forma = $('formaPagamento').value;
   const objetivo = $('objetivoCompra').value;
   const financiamento = forma === 'caixa' ? num('financiamento') : 0;
@@ -68,6 +69,16 @@ function calcular(){
   const conferencia = entradaTotal + financiamento;
   const diferenca = conferencia - precoFinal;
   const propostaNaoConfere = Math.abs(diferenca) > 0.02;
+
+  if($('atoRecomendado')){
+    if(tabela <= 0){
+      $('atoRecomendado').textContent = '💡 Selecione uma unidade para ver o ato recomendado de 12%.';
+    } else if(ato < atoRecomendado){
+      $('atoRecomendado').textContent = `💡 Ato recomendado (12%): ${money(atoRecomendado)}. O ato informado está abaixo da referência, mas isso não bloqueia a proposta.`;
+    } else {
+      $('atoRecomendado').textContent = `💡 Ato recomendado (12%): ${money(atoRecomendado)}. Referência comercial — não é uma trava.`;
+    }
+  }
 
   $('precoFinal').textContent = money(precoFinal);
   $('entradaTotal').textContent = money(entradaTotal);
