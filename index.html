@@ -44,6 +44,14 @@
         </label>
 
         <label>
+          Forma de pagamento
+          <select id="formaPagamento">
+            <option value="caixa">Financiamento Caixa</option>
+            <option value="construtora">Direto com a construtora</option>
+          </select>
+        </label>
+
+        <label>
           Valor de tabela
           <input id="valorTabela" inputmode="decimal" value="0" readonly />
         </label>
@@ -58,8 +66,8 @@
           <input id="ato" inputmode="decimal" value="10000" />
         </label>
 
-        <label>
-          Financiamento bancário
+        <label id="campoFinanciamento">
+          Financiamento Caixa
           <input id="financiamento" inputmode="decimal" value="0" />
         </label>
       </div>
@@ -132,7 +140,7 @@
         </div>
         <button id="copiar" class="primary">Copiar mensagem</button>
       </div>
-      <textarea id="mensagem" rows="16"></textarea>
+      <textarea id="mensagem" rows="20"></textarea>
       <div id="status" class="status"></div>
     </section>
   </main>
@@ -141,6 +149,6 @@
     Simulador Medina • ferramenta de apoio comercial. Valores sujeitos à confirmação.
   </footer>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
