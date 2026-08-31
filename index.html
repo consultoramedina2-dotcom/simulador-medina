@@ -21,7 +21,7 @@
       <div class="section-head">
         <div>
           <h2>Dados da proposta</h2>
-          <p>Preencha os valores. O saldo e as parcelas são recalculados automaticamente.</p>
+          <p>Preencha os valores. O sistema confere a composição antes de liberar a mensagem ao cliente.</p>
         </div>
         <button id="btnExemplo" class="ghost">Carregar exemplo</button>
       </div>
@@ -116,10 +116,10 @@
 
         <label>
           Valor da parcela mensal
-          <div class="readonly" id="valorMensal">R$ 0,00</div>
+          <input id="valorMensal" inputmode="decimal" value="0" />
         </label>
       </div>
-      <p class="hint">O valor mensal é calculado com base no saldo restante após desconto, ato, intermediárias, parcela única e financiamento.</p>
+      <p class="hint">Informe a quantidade e o valor da mensal. O simulador só libera a mensagem quando toda a composição fecha exatamente com o preço final.</p>
     </section>
 
     <section class="summary-grid">
@@ -145,7 +145,7 @@
       <div class="section-head">
         <div>
           <h2>Resumo para WhatsApp</h2>
-          <p>Revise e copie com um clique.</p>
+          <p>A mensagem só é liberada depois que a proposta estiver matematicamente conferida.</p>
         </div>
         <button id="copiar" class="primary">Copiar mensagem</button>
       </div>
@@ -158,6 +158,6 @@
     Simulador Medina • ferramenta de apoio comercial. Valores sujeitos à confirmação.
   </footer>
 
-  <script src="app.js?v=8"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>
