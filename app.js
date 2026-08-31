@@ -57,30 +57,31 @@ function calcular(){
   const forma = $('formaPagamento').value;
   const objetivo = $('objetivoCompra').value;
   const financiamento = forma === 'caixa' ? num('financiamento') : 0;
-  const chaves = num('chaves');
+  const parcelaUnica = num('chaves');
   const qtd = Math.max(0, parseInt($('qtdMensais').value || '0', 10));
+  const mensal = num('valorMensal');
   const inters = intermediarias();
   const totalInter = inters.reduce((s,x)=>s+x.valor,0);
   const precoFinal = Math.max(0, tabela - desconto);
-  const reservado = ato + totalInter + chaves + financiamento;
-  const saldoMensais = Math.max(0, precoFinal - reservado);
-  const mensal = qtd > 0 ? saldoMensais / qtd : 0;
-  const entradaTotal = ato + totalInter + chaves + saldoMensais;
+  const totalMensais = qtd * mensal;
+  const entradaTotal = ato + totalInter + parcelaUnica + totalMensais;
   const conferencia = entradaTotal + financiamento;
+  const diferenca = conferencia - precoFinal;
+  const propostaNaoConfere = Math.abs(diferenca) > 0.02;
 
   $('precoFinal').textContent = money(precoFinal);
   $('entradaTotal').textContent = money(entradaTotal);
   $('financiamentoResumo').textContent = money(financiamento);
   $('conferencia').textContent = money(conferencia);
-  $('valorMensal').textContent = qtd > 0 ? `${qtd}x de ${money(mensal)}` : money(0);
 
   const empreendimento = $('empreendimento').value.trim();
   const unidade = $('unidade').value.trim();
   const unidadeR2V = unidade.startsWith('R2V');
   const airbnbIncompativel = objetivo === 'airbnb' && unidade && !unidadeR2V;
-  const chavesData = $('chavesData').value.trim();
+  const parcelaUnicaData = $('chavesData').value.trim();
 
-  $('copiar').disabled = airbnbIncompativel;
+  $('copiar').disabled = airbnbIncompativel || propostaNaoConfere;
+
   if(airbnbIncompativel){
     $('status').textContent = 'Proposta bloqueada: para Airbnb/short stay, selecione uma unidade R2V.';
     $('mensagem').value = [
@@ -95,7 +96,23 @@ function calcular(){
     return;
   }
 
-  if($('status').textContent.startsWith('Proposta bloqueada')) $('status').textContent = '';
+  if(propostaNaoConfere){
+    const falta = diferenca < 0;
+    $('status').textContent = `Proposta bloqueada: ${falta ? 'faltam' : 'excedem'} ${money(Math.abs(diferenca))}.`;
+    $('mensagem').value = [
+      '🔴 *PROPOSTA NÃO CONFERE*',
+      '',
+      `💰 *Preço final:* ${money(precoFinal)}`,
+      `📌 *Total informado:* ${money(conferencia)}`,
+      `⚠️ *${falta ? 'Faltam' : 'Excedem'}:* ${money(Math.abs(diferenca))}`,
+      '',
+      'Revise ato, intermediárias, parcela única, mensais e financiamento.',
+      'A composição precisa totalizar exatamente o preço final para liberar a mensagem ao cliente.'
+    ].join('\n');
+    return;
+  }
+
+  $('status').textContent = '✅ Proposta conferida. Mensagem liberada para envio.';
 
   const linhas = [];
   linhas.push('🏠 *SIMULAÇÃO DE PAGAMENTO*');
@@ -118,15 +135,11 @@ function calcular(){
   linhas.push('');
   if(ato > 0) linhas.push(`• Ato: *${money(ato)}*`);
   inters.filter(x=>x.valor>0).forEach(x=> linhas.push(`• Intermediária${x.data ? ` (${x.data})` : ''}: *${money(x.valor)}*`));
-  if(chaves > 0) linhas.push(`• Parcela única${chavesData ? ` (${chavesData})` : ''}: *${money(chaves)}*`);
-  if(qtd > 0 && saldoMensais > 0) linhas.push(`• ${qtd} mensais de *${money(mensal)}*`);
+  if(parcelaUnica > 0) linhas.push(`• Parcela única${parcelaUnicaData ? ` (${parcelaUnicaData})` : ''}: *${money(parcelaUnica)}*`);
+  if(qtd > 0 && mensal > 0) linhas.push(`• ${qtd} mensais de *${money(mensal)}*`);
   if(financiamento > 0) linhas.push(`• Financiamento Caixa: *${money(financiamento)}*`);
   linhas.push('');
   linhas.push(`📌 *Total da proposta:* ${money(conferencia)}`);
-
-  if(Math.abs(conferencia - precoFinal) > 0.02){
-    linhas.push(`⚠️ Atenção: a composição acima difere do preço final em ${money(Math.abs(conferencia-precoFinal))}.`);
-  }
 
   linhas.push('');
   linhas.push('ℹ️ *Importante sobre o período de obras:*');
@@ -143,7 +156,7 @@ function calcular(){
   $('mensagem').value = linhas.join('\n');
 }
 
-['empreendimento','valorTabela','desconto','ato','financiamento','chaves','chavesData','qtdMensais'].forEach(id => $(id).addEventListener('input', calcular));
+['empreendimento','valorTabela','desconto','ato','financiamento','chaves','chavesData','qtdMensais','valorMensal'].forEach(id => $(id).addEventListener('input', calcular));
 $('unidade').addEventListener('change', atualizarValorUnidade);
 $('objetivoCompra').addEventListener('change', calcular);
 $('formaPagamento').addEventListener('change', atualizarFormaPagamento);
@@ -171,6 +184,7 @@ $('btnExemplo').addEventListener('click', () => {
   $('chaves').value = '20000';
   $('chavesData').value = 'outubro/2028';
   $('qtdMensais').value = '25';
+  $('valorMensal').value = '672';
   $('intermediarias').innerHTML = '';
   addIntermediaria('dezembro/2027',15000);
   atualizarFormaPagamento();
