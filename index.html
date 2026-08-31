@@ -85,7 +85,7 @@
     <section class="card">
       <div class="section-head">
         <div>
-          <h2>Intermediárias e chaves</h2>
+          <h2>Intermediárias e parcela única</h2>
           <p>Você pode adicionar quantas parcelas especiais precisar.</p>
         </div>
         <button id="addIntermediaria" class="secondary">+ Adicionar intermediária</button>
@@ -95,12 +95,12 @@
 
       <div class="grid two">
         <label>
-          Valor nas chaves
+          Valor da parcela única
           <input id="chaves" inputmode="decimal" value="0" />
         </label>
 
         <label>
-          Data / referência das chaves
+          Data / referência da parcela única
           <input id="chavesData" type="text" placeholder="Ex.: outubro/2028" />
         </label>
       </div>
@@ -119,7 +119,7 @@
           <div class="readonly" id="valorMensal">R$ 0,00</div>
         </label>
       </div>
-      <p class="hint">O valor mensal é calculado com base no saldo restante após desconto, ato, intermediárias, chaves e financiamento.</p>
+      <p class="hint">O valor mensal é calculado com base no saldo restante após desconto, ato, intermediárias, parcela única e financiamento.</p>
     </section>
 
     <section class="summary-grid">
@@ -158,6 +158,6 @@
     Simulador Medina • ferramenta de apoio comercial. Valores sujeitos à confirmação.
   </footer>
 
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>
